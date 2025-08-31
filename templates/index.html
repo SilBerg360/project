@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <header>
+        <h1 id="brand_name">FijndBrein</h1>
+        <button id="header-button" class="button" onclick="document.getElementById('search').focus();">
+        Search brain encyclopedia
+        </button>
+    </header>
+    <main class="no-overflow">
+        <div class="home-container">
+            <img id="home-image" src="/static/FijndBrein.svg" alt="Fijndbrein Image">
+            <form id="searchbar" action="/" method="post">
+                <input id="search" name="name" onkeydown="if(event.key === 'Enter'){event.preventDefault();}" type="search" autofocus autocomplete="off" placeholder="Search brain parts...">
+            </form>
+            <ul></ul>
+        </div>
+    </main>
+    <script>
+        let input = document.querySelector('input');
+        input.addEventListener('input', async function() {
+            let response = await fetch('/search?name=' + encodeURIComponent(input.value));
+            let brains = await response.json();
+            let html = ''
+            for (let brain of brains) {
+                html += `
+                <li>
+                    <form action="/fijnd" method="get">
+                        <input name="name" value="${brain}" type="hidden">
+                        <button class="button" type="submit">${brain}</button>
+                    </form>
+                </li>
+                `;
+            }
+            document.querySelector('ul').innerHTML = html;
+        });
+    </script>
+
+{% endblock %}
