@@ -3,7 +3,6 @@ from flask import Flask, redirect, render_template, request, jsonify # type: ign
 from sqlalchemy import create_engine, MetaData, Table, Select, bindparam, select # type: ignore
 
 app = Flask(__name__)
-app.debug = True
 
 engine = create_engine("sqlite:///brein.db", echo=True)
 
@@ -45,3 +44,8 @@ def fijnd():
             else:
                 return render_template("error.html", reason="Invalid input")
         return render_template("fijnd.html", brain=brain)
+    
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+    
